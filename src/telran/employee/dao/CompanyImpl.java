@@ -34,13 +34,15 @@ public class CompanyImpl implements Company {
         if (employee == null || size == capacity || findEmploy(employee.getId()) != null) {
             return false;
         }
-        for (int i = 0; i < capacity; i++) {
-            if (employees[i] == null) {
-                employees[i] = employee;
-                size++;
-                break;
-            }
-        }
+        for (int i = 0; i < capacity; i++) {        //  my variant
+            if (employees[i] == null) {             //
+                employees[i] = employee;            //
+                size++;                             //
+                break;                              //
+            }                                       //
+        }                                           //
+//        employees[size] = employee;           // Eduard variant
+//        size++;                               //
         return true;
     }
 
@@ -51,8 +53,10 @@ public class CompanyImpl implements Company {
             for (int i = 0; i < capacity; i++) {
                 if (employees[i] != null && employees[i].getId() == id) {
                     removed = employees[i];
-                    employees[i] = null;
-                    size--;
+                    employees[i] = null;                                                // my variant
+                    size--;                                                             //
+   //                 System.arraycopy(employees, i+1, employees, i, size-i-1 );    // Eduard variant
+   //                 employees[--size] = null;                                     //
                 }
             }
         }
@@ -74,7 +78,6 @@ public class CompanyImpl implements Company {
         return foundEmployee;
     }
 
-    //          return null;  only if no holes in array.
     @Override
     public int quantity() {
         return size;
@@ -90,10 +93,6 @@ public class CompanyImpl implements Company {
         }
         return total;
     }
-//    @Override
-//    public double avgSalary() {
-//        return totalSalary() / size;
-//    }
 
     @Override
     public double totalSales() {
@@ -122,14 +121,7 @@ public class CompanyImpl implements Company {
 
     @Override
     public Employee[] findEmployeesHoursGreaterThan(int hours) {
-        //       Predicate<Employee> predicate = new HoursPredicate(hours);
-        Predicate<Employee> predicate = new Predicate<Employee>() {
-            @Override
-            public boolean test(Employee employee) {
-                return employee.getHours() > hours;
-            }
-        };
-        return findEmployeesByPredicate(predicate);
+        return findEmployeesByPredicate(e-> e.getHours()> hours);
     }
 
     @Override
@@ -143,59 +135,14 @@ public class CompanyImpl implements Company {
         Employee[] foundEmployees = new Employee[size];
         int count = 0;
         for (Employee employee : employees) {
-            if (employee != null &&
-                    (predicate.test(employee))) {
+            if (employee != null && (predicate.test(employee))) {
                 foundEmployees[count++] = employee;
             }
             if (count == size) {
                 break; // Прерывание цикла, если достигнуто максимальное количество
             }
         }
-        return Arrays.copyOfRange(foundEmployees, 0, count);
+        return Arrays.copyOf(foundEmployees,  count);
     }
-
-
 }
 
-
-//        Employee[] findEmployees = new Employee[count]
-//        for(int i=0; i<count; i++){
-//            findEmployees[i]=foundEmployees[i];
-//        }
-//        return findEmployees;
-
-
-//        int i = 0;
-//        while (employees[i] != null) {
-//            i++;
-//        }
-//        employees[i] = employee;
-//        size++;
- /*
-       employees[size++] = employee;
-        size++;
-*/
-
-
-
-//        Employee[] findedEmployee = new Employee[size];
-//        int count = 0;
-//        for (Employee employee : employees) {
-//            if (employee != null && employee.getHours() > hours) {
-//                findedEmployee[count++] = employee;
-//            }
-//        }
-//        return Arrays.copyOfRange(findedEmployee, 0, count);
-
-//        Predicate<Employee> predicate = e -> e.calcSalary() >= minSalary && e.calcSalary() < maxSalary;
-//        return findEmployeesByPredicate(predicate);
-
-//        Employee[] findedEmployee = new Employee[size];
-//        int count = 0;
-//        for (Employee employee : employees) {
-//            if (employee != null &&
-//                    (employee.calcSalary() >= minSalary && employee.calcSalary() < maxSalary)) {
-//                findedEmployee[count++] = employee;
-//            }
-//        }
-//        return Arrays.copyOfRange(findedEmployee, 0, count);
